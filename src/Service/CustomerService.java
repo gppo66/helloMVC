@@ -1,44 +1,50 @@
 package Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import model.Customer;
 
 public class CustomerService {
+	
+	private static final CustomerService instance = new CustomerService();
+	
+	private Map<String, Customer> customers;
+	
+	private CustomerService() {
+		customers = new HashMap<String, Customer>();
+		System.out.println("In CustomerService Constructor");
+	}
+	
+	public static CustomerService getInstance() {
+		return instance;
+	}
 
-		private Map<String, Customer> customerMap;
-		
-		public CustomerService() {
-			
-			customerMap = new HashMap<String, Customer> ();
-			
-			addCusttomer(new Customer("id001","alice","aclie.hansung.ac.kr"));
-			addCusttomer(new Customer("id002","bob","bob.hansung.ac.kr"));
-			addCusttomer(new Customer("id003","charlie","charlie.hansung.ac.kr"));
-			addCusttomer(new Customer("id004","daniel","daniel.hansung.ac.kr"));
-			addCusttomer(new Customer("id005","trudy","trudy.hansung.ac.kr"));
-		}
-
-		private void addCusttomer(Customer customer) {
-			// TODO Auto-generated method stub
-			customerMap.put(customer.getId(), customer);
-			
-		}
-		
-		public Customer findCustomer(String id) {
-			if(id != null) 
-				return(customerMap.get(id.toLowerCase()));
-			else
+	public void addCustomer(Customer customer) {
+		customers.put(customer.getId(), customer);
+	}
+	
+	public Customer findCustomer(String id) {
+		if(id != null)
+			return(customers.get(id.toLowerCase()));
+		else
 			return null;
 	}
-		public List<Customer> getALlCustomers() {
-			List<Customer> customerList = new ArrayList<Customer>(customerMap.values());
-			
-			return customerList;
-			
-		}
-}
 
+	public Customer login(String id, String password) {
+		Customer customer = findCustomer(id);
+	
+		if(customer != null) {
+			if( password.equals(customer.getPassword())  ) {
+				System.out.println("login success");
+				return customer;
+			}
+					
+			else {
+				System.out.println("login failed");
+				return null;
+			}
+		}	
+		return null;
+	}
+}

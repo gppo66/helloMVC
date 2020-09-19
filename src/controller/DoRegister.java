@@ -9,20 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Customer;
 import Service.CustomerService;
+import model.Customer;
 
 /**
- * Servlet implementation class DoLogin
+ * Servlet implementation class DoRegister
  */
-@WebServlet("/doLogin")
-public class Dologin extends HttpServlet {
+@WebServlet("/doRegister")
+public class DoRegister extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Dologin() {
+    public DoRegister() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,16 +30,20 @@ public class Dologin extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		String gender = request.getParameter("gender");
+		String email = request.getParameter("email");
 		
 		CustomerService service = (CustomerService) CustomerService.getInstance();
-		Customer customer = service.login(id, password);
+		Customer customer = new Customer(id, password, name, gender, email); 
+		service.addCustomer(customer);
+		String page = "/view/registerSuccess.jsp";
+		request.setAttribute("customer", customer);
 		
-		String page;
-		
+		/*
 		if(customer == null) {
 			page ="/view/loginFail.jsp";
 			request.setAttribute("id", id);
@@ -48,8 +52,9 @@ public class Dologin extends HttpServlet {
 			page ="/view/loginSuccess.jsp";
 			request.setAttribute("customer", customer);
 		}
-			
+		*/
 		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
 		dispatcher.forward(request, response);
 	}
+
 }
